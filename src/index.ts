@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { generateObject } from 'ai'
 import { createGroq } from '@ai-sdk/groq'
+import { handle } from 'hono/vercel'
 
 const app = new Hono()
   .use(logger())
@@ -37,10 +38,10 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal server error', message: 'Unexpected error occurred.' }, 500)
 })
 
+// Route utama
 app.get('/', (c) => {
   return c.text('Hello, World!')
 })
-
 
 // API endpoint to generate questions
 app.post('/ai/quiz', zValidator('json', requestSchema), async (c) => {
@@ -59,4 +60,7 @@ app.post('/ai/quiz', zValidator('json', requestSchema), async (c) => {
   return c.json(object)
 })
 
-export default app
+// Menggunakan handler Vercel
+export const GET = handle(app)
+export const POST = handle(app)
+export default handle(app)
