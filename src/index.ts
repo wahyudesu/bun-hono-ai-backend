@@ -37,6 +37,11 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal server error', message: 'Unexpected error occurred.' }, 500)
 })
 
+app.get('/', (c) => {
+  return c.text('Hello, World!')
+})
+
+
 // API endpoint to generate questions
 app.post('/ai/quiz', zValidator('json', requestSchema), async (c) => {
   const { topic, number_question } = c.req.valid('json')
